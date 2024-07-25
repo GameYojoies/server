@@ -1,7 +1,5 @@
 const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt'); // นำเข้า expressJwt
-
-// โหลดค่าจากไฟล์ .env
+const expressJwt = require('express-jwt');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -11,7 +9,8 @@ exports.protect = expressJwt({
   userProperty: "auth"
 });
 
-console.log(process.env.SECRET_KEY);
+console.log(process.env.SECRET_KEY); // เพื่อตรวจสอบว่าค่า SECRET_KEY ถูกโหลดหรือไม่
+
 exports.login = (req, res) => {
   const { username, password } = req.body;
   if (password === process.env.PASSWORD) {

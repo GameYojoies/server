@@ -4,10 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const blogRoute = require("./routers/blog");
 const authRoute = require("./routers/auth");
-
-const jwt = require('express-jwt');
-require('dotenv').config();
-
+const authController = require('./controllers/authController'); // อัปเดต path ตามจริง
 require("dotenv").config();
 
 const app = express();
@@ -20,15 +17,16 @@ mongoose
   })
   .then(() => console.log("=========เชื่อมต่อสพเร็จ==============="))
   .catch((err) => console.log(err));
-  
 
+  app.use(authController.protect);
+  
 // middleware
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 app.use('/public', express.static('uploads'))
 
-app.use(jwt({ secret: process.env.SECRET_KEY, algorithms: ['HS256'] }).unless({ path: ['/login', '/register'] }));
+
 // routes
 app.use("/api",blogRoute)
 app.use("/api",authRoute)
