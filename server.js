@@ -1,47 +1,43 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
-const dotenv = require('dotenv');
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const blogRoute = require("./routers/blog");
+const authRoute = require("./routers/auth");
 
-dotenv.config();
+const jwt = require('express-jwt');
+require('dotenv').config();
+
+require("dotenv").config();
 
 const app = express();
+
+// connect cloud database
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: false
+  })
+  .then(() => console.log("=========เชื่อมต่อสพเร็จ==============="))
+  .catch((err) => console.log(err));
+  
+
+// middleware
 app.use(express.json());
+app.use(cors());
+app.use(morgan("dev"));
+app.use('/public', express.static('uploads'))
 
-// Middleware to protect routes
-const protect = expressJwt({
-  secret: process.env.SECRET_KEY,
-  algorithms: ["HS256"],
-  userProperty: "auth"
-});
+app.use(jwt({ secret: process.env.SECRET_KEY, algorithms: ['HS256'] }).unless({ path: ['/login', '/register'] }));
+// routes
+app.use("/api",blogRoute)
+app.use("/api",authRoute)
+app.get("/",(req, res) =>{
+  res.json({
+    message: "Hello World Kub"
+  })
+})
 
-// Console log for debugging
-console.log(process.env.SECRET_KEY, "secret");
 
-// Login route
-const login = (req, res) => {
-  const { username, password } = req.body;
-  if (password === process.env.PASSWORD) {
-    const token = jwt.sign({ username }, process.env.SECRET_KEY, {
-      expiresIn: "1d",
-    });
-    return res.json({ token, username });
-  } else {
-    return res.status(400).json({
-      error: "Invalid password",
-    });
-  }
-};
-
-// Sample protected route
-app.get('/protected', protect, (req, res) => {
-  res.json({ message: "You have access to this protected route", user: req.auth });
-});
-
-// Login route
-app.post('/login', login);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log(`Starting server ${port}`));
