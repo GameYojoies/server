@@ -1,14 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const {create,getAllBlogs,singleBlog,removeBlog,updateBlog} = require("../controllers/blogController")
-const {protect} = require('../controllers/authController')
+const { create, getAllBlogs, singleBlog, removeBlog, updateBlog, getFile } = require('../controllers/blogController');
+const { protect } = require('../controllers/authController');
+const upload = require('../middleware/multer'); // Import multer configuration
 
-router.post('/create',protect,create)
-// การเรียนใช้งาน protect
-router.get('/blogs',getAllBlogs)
-router.get('/blog/:slug',singleBlog)
-router.delete('/blog/:slug',protect,removeBlog)
-router.patch('/blog/:slug',protect,updateBlog)
+// Create a new blog post with image upload
+router.post('/create', protect, upload.single('image'), create);
 
+// Get all blog posts
+router.get('/blogs', getAllBlogs);
+
+// Get a single blog post by slug
+router.get('/blog/:slug', singleBlog);
+
+// Delete a blog post by slug
+router.delete('/blog/:slug', protect, removeBlog);
+
+// Update a blog post by slug
+router.patch('/blog/:slug', protect, updateBlog);
 
 module.exports = router;

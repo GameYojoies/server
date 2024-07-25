@@ -23,6 +23,8 @@ mongoose
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+app.use('/public', express.static('uploads'))
+
 
 // routes
 app.use("/api",blogRoute)
