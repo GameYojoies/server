@@ -19,7 +19,7 @@ mongoose
   .catch((err) => console.log(err));
 
   app.use(authController.protect);
-  
+  console.log("SECRET_KEY from local environment:", process.env.SECRET_KEY);
 // middleware
 app.use(express.json());
 app.use(cors());
