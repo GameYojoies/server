@@ -5,7 +5,7 @@ const expressJwt = require('express-jwt'); // นำเข้า expressJwt
 require('dotenv').config();
 
 exports.protect = expressJwt({
-  secret: process.env.SECRET_KEY.trim(), // ใช้ SECRET_KEY จาก environment variables
+  secret: process.env.SECRET_KEY, // ใช้ SECRET_KEY จาก environment variables
   algorithms: ["HS256"], // อัลกอริธึมที่ใช้ในการเข้ารหัส
   userProperty: "auth" // ชื่อ property ที่จะเก็บข้อมูลผู้ใช้
 });
