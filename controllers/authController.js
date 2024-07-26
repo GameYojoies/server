@@ -1,15 +1,21 @@
 const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
+const expressJwt = require('express-jwt'); 
 const dotenv = require('dotenv');
+
 dotenv.config();
 
 exports.protect = expressJwt({
   secret: process.env.SECRET_KEY,
   algorithms: ["HS256"],
-  userProperty: "auth"
+  userProperty: "auth",
+  getToken: (req) => {
+    console.log("Authorization Header:", req.headers.authorization);
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+      return req.headers.authorization.split(' ')[1];
+    }
+    return null;
+  }
 });
-
-console.log(process.env.SECRET_KEY); // เพื่อตรวจสอบว่าค่า SECRET_KEY ถูกโหลดหรือไม่
 
 exports.login = (req, res) => {
   const { username, password } = req.body;

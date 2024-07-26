@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const blogRoute = require("./routers/blog");
 const authRoute = require("./routers/auth");
-const authController = require('./controllers/authController'); // อัปเดต path ตามจริง
+
 require("dotenv").config();
 
 const app = express();
@@ -18,8 +18,7 @@ mongoose
   .then(() => console.log("=========เชื่อมต่อสพเร็จ==============="))
   .catch((err) => console.log(err));
 
-  app.use(authController.protect);
-  console.log("SECRET_KEY from local environment:", process.env.SECRET_KEY);
+
 // middleware
 app.use(express.json());
 app.use(cors());
