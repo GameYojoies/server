@@ -25,7 +25,9 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use('/public', express.static('uploads'))
 
-
+app.use(cors({
+  origin: 'http://212.80.215.114' // ระบุโดเมนที่อนุญาต
+}));
 // routes
 app.use("/api",blogRoute)
 app.use("/api",authRoute)
