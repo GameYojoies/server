@@ -24,7 +24,7 @@ exports.create = async (req, res) => {
       content,
       author,
       slug,
-      image: `http://localhost:5500/public/${req.file.filename}`, // Correct file path
+      image: `http://212.80.215.114:5500/public/${req.file.filename}`, // Correct file path
     });
     return res.status(201).json(blog);
   } catch (error) {
